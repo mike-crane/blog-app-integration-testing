@@ -44,7 +44,7 @@ function tearDownDb() {
   return mongoose.connection.dropDatabase();
 }
 
-describe('Blog posts API resource' function() {
+describe('Blog posts API resource', function() {
 
   before(function() {
     return runServer(TEST_DATABASE_URL);
@@ -61,5 +61,56 @@ describe('Blog posts API resource' function() {
   after(function() {
     return closeServer();
   });
-  
+
+  // Testing Strategy
+  // 1. Set up db in known state
+  // 2. Make a request to API
+  // 3. Inspect response
+  // 4. Inspect state of db
+  // 5. Tear down db
+
+  //get request test
+  describe('GET endpoint', function() {
+    it('should return all existing blog posts', function() {
+      let res; 
+      return chai.request(app)
+        .get('/posts')
+        .then(function(_res) {
+          res = _res;
+          expect(res).to.have.status(200);
+          expect(res.body.posts).to.have.lengthOf.at.least(1);
+          return BlogPost.count();
+        })
+        .then(function(count) {
+          expect(res.body.posts).to.have.lengthOf(count);
+        });
+    });
+
+    it('should return posts with right fields', function() {
+
+      let resBlogPost;
+      return chai.request(app)
+        .get('/posts')
+        .then(function(res) {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body.posts).to.be.a('array');
+          expect(res.body.posts).to.have.lengthOf.at.least(1);
+
+          res.body.posts.forEach(function(post) {
+            expect(post).to.be.a('object');
+            expect(post).to.include.keys(
+                'id', 'title', 'content', 'author');
+          });
+          resBlogPost = res.body.posts[0];
+          return BlogPost.findById(resBlogPost.id);
+        })
+        .then(function(post) {
+          expect(resBlogPost.id).to.equal(post.id);
+          expect(resBlogPost.title).to.equal(post.title);
+          expect(resBlogPost.content).to.equal(post.content);
+          expect(resBlogPost.author).to.contain(post.author.lastName);
+        });
+    });
+  });
 });
