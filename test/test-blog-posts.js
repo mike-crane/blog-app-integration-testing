@@ -78,11 +78,11 @@ describe('Blog posts API resource', function() {
         .then(function(_res) {
           res = _res;
           expect(res).to.have.status(200);
-          expect(res.body.posts).to.have.lengthOf.at.least(1);
+          expect(res.body).to.have.lengthOf.at.least(1);
           return BlogPost.count();
         })
         .then(function(count) {
-          expect(res.body.posts).to.have.lengthOf(count);
+          expect(res.body).to.have.lengthOf(count);
         });
     });
 
@@ -94,19 +94,18 @@ describe('Blog posts API resource', function() {
         .then(function(res) {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          expect(res.body.posts).to.be.a('array');
-          expect(res.body.posts).to.have.lengthOf.at.least(1);
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.lengthOf.at.least(1);
 
-          res.body.posts.forEach(function(post) {
+          res.body.forEach(function(post) {
             expect(post).to.be.a('object');
             expect(post).to.include.keys(
                 'id', 'title', 'content', 'author');
           });
-          resBlogPost = res.body.posts[0];
+          resBlogPost = res.body[0];
           return BlogPost.findById(resBlogPost.id);
         })
         .then(function(post) {
-          expect(resBlogPost.id).to.equal(post.id);
           expect(resBlogPost.title).to.equal(post.title);
           expect(resBlogPost.content).to.equal(post.content);
           expect(resBlogPost.author).to.equal(post.authorName);
@@ -150,7 +149,11 @@ describe('Blog posts API resource', function() {
     it('should update fields you send over', function () {
       const updateData = {
         title: 'Mr. Bigglesworth goes to Washington',
-        content: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
+        content: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.',
+        author: {
+          firstName: 'foo',
+          lastName: 'bar'
+        }
       };
 
       return BlogPost
