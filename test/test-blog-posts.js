@@ -78,11 +78,11 @@ describe('Blog posts API resource', function() {
         .then(function(_res) {
           res = _res;
           expect(res).to.have.status(200);
-          expect(res.body).to.have.lengthOf.at.least(1);
+          expect(res.body.posts).to.have.lengthOf.at.least(1);
           return BlogPost.count();
         })
         .then(function(count) {
-          expect(res.body).to.have.lengthOf(count);
+          expect(res.body.posts).to.have.lengthOf(count);
         });
     });
 
@@ -94,22 +94,22 @@ describe('Blog posts API resource', function() {
         .then(function(res) {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          expect(res.body).to.be.a('array');
-          expect(res.body).to.have.lengthOf.at.least(1);
+          expect(res.body.posts).to.be.a('array');
+          expect(res.body.posts).to.have.lengthOf.at.least(1);
 
-          res.body.forEach(function(post) {
+          res.body.posts.forEach(function(post) {
             expect(post).to.be.a('object');
             expect(post).to.include.keys(
                 'id', 'title', 'content', 'author');
           });
-          resBlogPost = res.body[0];
+          resBlogPost = res.body.posts[0];
           return BlogPost.findById(resBlogPost.id);
         })
         .then(function(post) {
           expect(resBlogPost.id).to.equal(post.id);
           expect(resBlogPost.title).to.equal(post.title);
           expect(resBlogPost.content).to.equal(post.content);
-          // expect(resBlogPost.author).to.contain(post.author.lastName);
+          expect(resBlogPost.author).to.equal(post.authorName);
         });
     });
   });
@@ -132,14 +132,15 @@ describe('Blog posts API resource', function() {
           expect(res.body.id).to.not.be.null;
           expect(res.body.title).to.equal(newBlogPost.title);
           expect(res.body.content).to.equal(newBlogPost.content);
-          // expect(res.body.author).to.equal(newBlogPost.author.firstName);
+          expect(res.body.author).to.equal(`${newBlogPost.author.firstName} ${newBlogPost.author.lastName}`);
 
           return BlogPost.findById(res.body.id);
         })
         .then(function (post) {
           expect(post.title).to.equal(newBlogPost.title);
           expect(post.content).to.equal(newBlogPost.content);
-          // expect(post.author.firstName).to.equal(newBlogPost.author.firstName);
+          expect(post.author.firstName).to.equal(newBlogPost.author.firstName);
+          expect(post.author.lastName).to.equal(newBlogPost.author.lastName);
         });
     });
   });
@@ -169,6 +170,8 @@ describe('Blog posts API resource', function() {
         .then(function (post) {
           expect(post.title).to.equal(updateData.title);
           expect(post.content).to.equal(updateData.content);
+          expect(post.author.firstName).to.equal(updateData.author.firstName);
+          expect(post.author.lastName).to.equal(updateData.author.lastName);
         });
     });
   });
