@@ -1,4 +1,11 @@
 language: node_js
 node_js: node
-services: 
+services:
 - mongodb
+deploy:
+  provider: heroku
+  api_key:
+    secure: tY5O+Jviixr0LVj+CM5D0Gd6/rvZv9QicO1ez4HAmbv8sVJTYj8lXJqrs2AVozGSDeZZQM5yR4SiBSyNjNADduC+3ZQtWzn6sqObJ9BDY2+F+6D9XQBLCfHACu89X3oWl6V80M7IpfYJo40hhUcfzXSi7NlNRYG3yNlW6KCYZDRHpu41+wF7nWKcQg8IYZPAc4+/GbvNwkCxOzHUQZqychmTZtP5YM7RPw2Fe7ryaGCSuGI6Jwk1ksaEP0W8vr/LUVNg++O2oxFhFEJMpEjGfiYg+vviuLJb/NYAj8XF/X3yFvmGb5vg5+Z0/OrJmUOvmlJ7c+MRVhLCGowSvIYxvBH0qpGnCkFuS7fkDoRTHIY+s9cSWS77saV8w+/s7QZPT+j8A2Xye5K4lThHUrslcSboLNdO4jsybMGLQvVUrIwI0sJgXHVKDx+Ye1GQTRg3t2h95YqsFHCXLnQeOcvL/9pagARhYAQzQextvB88ftFAdZBmeiOirGW4PDqbnLzmo/JVAhc6Xb4UugvxNoTVOdQteQ2GLjvwSys2bZ5or0ZrQ2mUKhxZ1ObICxRbJ9BWU+HutXMnwYYRjxtNnzXc0d5UvVdYVC8iHD0qe+gVhELreQ9w19dlyORJVWZ7fpy926HE+CUn9lbKZ2p2z56sAP1NuvBNw+qhTJ98SlSa0cc=
+  app: fathomless-ridge-26458
+  on:
+    repo: mike-crane/blog-app-integration-testing
