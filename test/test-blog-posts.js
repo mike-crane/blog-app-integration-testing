@@ -13,7 +13,7 @@ const {TEST_DATABASE_URL} = require('../config');
 
 chai.use(chaiHttp);
 
-// inserts 10 blog post documents into the database
+// inserts 10 blog post documents into the database 
 function seedBlogPostData() {
   console.info('seeding blog post data');
   const seedData = [];
